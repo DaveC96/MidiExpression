@@ -30,3 +30,17 @@
 *.exe
 *.out
 *.app
+
+
+####################
+# Eagle stuff
+
+Hardware/*.s#*
+Hardware/*.b#*
+Hardware/*.scr
+Hardware/CAMOutputs/*
+Hardware/mainboard/*
+Hardware/topboard/*
+Hardware/*.zip
+Hardware/*.cam
+
