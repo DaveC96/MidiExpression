@@ -49,7 +49,29 @@ void onRecvSysex(byte* data, unsigned size)
     digitalWrite(PIN_RIGHT_EYE, HIGH);
     digitalWrite(LED_BUILTIN, LOW);
     return;
-  } else {
+  } else if (size = 5 && data[2] == 0xDE && data[3] == 0xAD) {  // Nuke flash
+    for (int i = 0; i < EEPROM.length(); i++) {
+      EEPROM.write(i, 0xFF); // AppConfig ctor will recreate safe values on reboot
+    }
+    // Blink before reset o_o
+    digitalWrite(PIN_LEFT_EYE, HIGH);       //  U
+    digitalWrite(PIN_RIGHT_EYE, HIGH);      //    g
+    delay(500);                             //  l
+    digitalWrite(PIN_LEFT_EYE, LOW);        //    Y
+    digitalWrite(PIN_RIGHT_EYE, LOW);       
+    delay(200);                             //  c
+    digitalWrite(PIN_LEFT_EYE, HIGH);       //    o
+    digitalWrite(PIN_RIGHT_EYE, HIGH);      //  D
+    delay(1000);                            //    e
+    digitalWrite(PIN_LEFT_EYE, LOW);
+    digitalWrite(PIN_RIGHT_EYE, LOW);       //  t
+    delay(200);                             //    I
+    digitalWrite(PIN_LEFT_EYE, HIGH);       //  m
+    digitalWrite(PIN_RIGHT_EEYE, HIGH);     //    e
+    delay(1000);
+    resetFunc();
+
+  } else {  // Probably a config message, lets hope for the best
     Config->setChannel(data[2]);
     Config->setCC(data[3]);
     Config->setValueMin(data[4]);
