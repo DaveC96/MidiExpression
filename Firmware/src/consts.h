@@ -25,8 +25,7 @@
 // HARDWARE ================================================
 #define PIN_LEFT_EYE    6           // D3
 #define PIN_RIGHT_EYE   7           // D4
-#define PIN_SPI_CS      13          // D10
-#define PIN_SPI_MOSI    14          // D11
-#define PIN_SPI_CLK     16          // D13
+
+#define SPI_DELAY_MS    100         // ...Long enough to pass the edge
 
 #endif
