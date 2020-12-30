@@ -1,30 +1,23 @@
 #include "AppConfig.h"
 
-
-AppConfig::AppConfig()
-{
-    // On init, restore from flash
-    this->loadFromFlash();
-}
-
-void AppConfig::storeToFlash()
+void storeToFlash(AppConfig* config)
 {
     // Serialize:
     int offset = 0;
-    uint8_t serialArr[sizeof(AppConfig)+LEN_FLASH_OK_TOKEN];
+    AppConfig_serial serialArr[sizeof(AppConfig)+LEN_FLASH_OK_TOKEN];
     const char* header = FLASH_OK_TOKEN;
 
     memcpy(&serialArr+offset, &header, LEN_FLASH_OK_TOKEN);
     offset += LEN_FLASH_OK_TOKEN;
 
-    memcpy(&serialArr+offset, &this->channel, sizeof(this->channel));
-    offset += sizeof(this->channel);
-    memcpy(&serialArr+offset, &this->cc, sizeof(this->cc));
-    offset += sizeof(this->cc);
-    memcpy(&serialArr+offset, &this->valueMin, sizeof(this->valueMin));
-    offset += sizeof(this->valueMin);
-    memcpy(&serialArr+offset, &this->valueMax, sizeof(this->valueMax));
-    offset += sizeof(this->valueMax);
+    memcpy(&serialArr+offset, &config->channel, sizeof(config->channel));
+    offset += sizeof(config->channel);
+    memcpy(&serialArr+offset, &config->cc, sizeof(config->cc));
+    offset += sizeof(config->cc);
+    memcpy(&serialArr+offset, &config->valueMin, sizeof(config->valueMin));
+    offset += sizeof(config->valueMin);
+    memcpy(&serialArr+offset, &config->valueMax, sizeof(config->valueMax));
+    offset += sizeof(config->valueMax);
 
     // Write:
     for (int i = 0; i < offset; i++) {
@@ -32,11 +25,11 @@ void AppConfig::storeToFlash()
     }
 }
 
-void AppConfig::loadFromFlash()
+void loadFromFlash(AppConfig* config)
 {
     size_t length = sizeof(AppConfig)+LEN_FLASH_OK_TOKEN;
     int offset = 0;
-    uint8_t serialArr[length];
+    AppConfig_serial serialArr[length];
     char headerBuf[LEN_FLASH_OK_TOKEN];
 
     // Read:
@@ -46,7 +39,7 @@ void AppConfig::loadFromFlash()
     }
     const char* header = (const char*)headerBuf;
     if (strcmp(header, FLASH_OK_TOKEN) != 0) {      // Shenanigans occurred. Panic.
-        this->_loadPanic();
+        _loadPanic(config);
         return;
     }
 
@@ -56,23 +49,23 @@ void AppConfig::loadFromFlash()
     }
 
     // Unpack:
-    this->setChannel(serialArr[offset]);
-    offset += sizeof(this->channel);
-    this->setCC(serialArr[offset]);
-    offset += sizeof(this->cc);
-    this->setValueMin(serialArr[offset]);
-    offset += sizeof(this->valueMin);
-    this->setValueMax(serialArr[offset]);
-    offset += sizeof(this->valueMax);
+    config->channel = serialArr[offset];
+    offset += sizeof(config->channel);
+    config->cc = serialArr[offset];
+    offset += sizeof(config->cc);
+    config->valueMin = serialArr[offset];
+    offset += sizeof(config->valueMin);
+    config->valueMax = serialArr[offset];
+    offset += sizeof(config->valueMax);
 }
 
-void AppConfig::_loadPanic()
+void _loadPanic(AppConfig* config)
 {
     // Restore safe defaults:
-    this->setChannel(DEFAULT_CHANNEL);
-    this->setCC(DEFAULT_CC);
-    this->setValueMin(DEFAULT_MIN);
-    this->setValueMax(DEFAULT_MAX);
+    config->channel = DEFAULT_CHANNEL;
+    config->cc = DEFAULT_CC;
+    config->valueMin = DEFAULT_MIN;
+    config->valueMax = DEFAULT_MAX;
 
     // Wipe the EEPROM:
     for (int i = FLASH_OFFSET_APPCONFIG;
@@ -83,59 +76,5 @@ void AppConfig::_loadPanic()
     }
 
     // Leave it in kinda an ok state:
-    this->storeToFlash();
+    storeToFlash(config);
 }
-
-
-#pragma region setters  //      ==      ==      ==      ==      ==
-
-void AppConfig::setChannel(uint8_t val)
-{
-    if (val < MIDI_MAX)
-        this->channel = val;
-}
-
-void AppConfig::setCC(uint8_t val)
-{
-    if (val < MIDI_MAX)
-        this->cc = val;
-}
-
-void AppConfig::setValueMin(uint8_t val)
-{
-    if (val < MIDI_MAX)
-        this->valueMin = val;
-}
-
-void AppConfig::setValueMax(uint8_t val)
-{
-    if (val < MIDI_MAX)
-        this->valueMax = val;
-}
-
-
-#pragma endregion
-#pragma region getters  //      ==      ==      ==      ==      ==
-
-uint8_t AppConfig::getChannel()
-{
-    return this->channel;
-}
-
-uint8_t AppConfig::getCC()
-{
-    return this->cc;
-}
-
-uint8_t AppConfig::getValueMin()
-{
-    return this->valueMin;
-}
-
-uint8_t AppConfig::getValueMax()
-{
-    return this->valueMax;
-}
-
-
-#pragma endregion
