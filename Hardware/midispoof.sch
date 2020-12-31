@@ -10467,18 +10467,18 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 </net>
 <net name="N$18" class="0">
 <segment>
-<pinref part="M1" gate="G$1" pin="D3"/>
 <pinref part="R5" gate="G$1" pin="2"/>
-<wire x1="167.64" y1="121.92" x2="160.02" y2="121.92" width="0.1524" layer="91"/>
+<wire x1="162.56" y1="121.92" x2="160.02" y2="121.92" width="0.1524" layer="91"/>
+<wire x1="162.56" y1="121.92" x2="162.56" y2="116.84" width="0.1524" layer="91"/>
+<pinref part="M1" gate="G$1" pin="D5"/>
+<wire x1="162.56" y1="116.84" x2="167.64" y2="116.84" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$19" class="0">
 <segment>
-<pinref part="M1" gate="G$1" pin="D4"/>
-<wire x1="167.64" y1="119.38" x2="162.56" y2="119.38" width="0.1524" layer="91"/>
-<wire x1="162.56" y1="119.38" x2="162.56" y2="114.3" width="0.1524" layer="91"/>
 <pinref part="R6" gate="G$1" pin="2"/>
-<wire x1="162.56" y1="114.3" x2="160.02" y2="114.3" width="0.1524" layer="91"/>
+<pinref part="M1" gate="G$1" pin="D6"/>
+<wire x1="160.02" y1="114.3" x2="167.64" y2="114.3" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
